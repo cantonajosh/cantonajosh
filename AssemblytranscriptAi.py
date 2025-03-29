@@ -7,7 +7,7 @@ Requirement already satisfied: certifi>=2017.4.17 in c:\users\tdh it\anaconda3\l
 STEP 2: INSTALLING ASSEMBLY AI AND ENDPOINTS
 import requests
 import time
-
+import streamlit
 # Replace with your AssemblyAI API key
 API_KEY = 'a49e7c835a2b40d18c8ec7eb9da8f8e1'
 HEADERS = {
