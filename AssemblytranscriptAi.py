@@ -1,3 +1,4 @@
+pip install streamlit
 !pip install requests
 Requirement already satisfied: requests in c:\users\tdh it\anaconda3\lib\site-packages (2.32.3)
 Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\tdh it\anaconda3\lib\site-packages (from requests) (3.3.2)
