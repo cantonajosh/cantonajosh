@@ -1,8 +1,4 @@
 import streamlit as st
-import requests
-import time
-import os
-from datetime import datetime
 from collections import Counter
 
 def analyze_sales(items):
@@ -13,28 +9,62 @@ def analyze_sales(items):
     items (list): A list of items sold.
     
     Returns:
-    None
+    dict: Analysis results containing:
+        - num_products: Number of unique products
+        - product_counts: Counter object with quantities
+        - most_sold: Most sold product (name, count)
     """
     # (a) Number of unique products sold
     num_products = len(set(items))
-    print(f"Number of products sold is {num_products}")
     
     # (b) Quantity of each product sold
     product_counter = Counter(items)
-    print(f"Counter({product_counter})")
     
     # (c) The product that was sold the most
-    most_sold_product = product_counter.most_common(1)[0][0]
-    print(f"The Product sold the most is {most_sold_product}")
+    most_sold_product = product_counter.most_common(1)[0]
+    
+    return {
+        'num_products': num_products,
+        'product_counts': product_counter,
+        'most_sold': most_sold_product
+    }
 
-# Main program
-if __name__ == "__main__":
-    # Accept input from the user
-    items_sold = input("Enter the list of items sold (comma-separated): ")
+# Streamlit UI
+st.title("Sales Data Analysis")
+st.write("Enter the items sold (comma-separated) to analyze sales data")
+
+# Input field
+user_input = st.text_input("Items sold:", "apple, banana, apple, orange, banana, apple")
+
+# Clean and process input
+if user_input:
+    # Remove parentheses if present and clean items
+    cleaned_input = user_input.replace("(", "").replace(")", "")
+    items_list = [item.strip() for item in cleaned_input.split(",") if item.strip()]
     
-  
-    items_sold = items_sold.replace("(", "").replace(")", "")
-    
-    items_sold = [item.strip() for item in items_sold.split(",")]
-    
-    analyze_sales(items_sold)
+    if items_list:
+        # Analyze the data
+        results = analyze_sales(items_list)
+        
+        # Display results
+        st.subheader("Analysis Results")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric("Unique Products", results['num_products'])
+        
+        with col2:
+            st.metric("Most Sold Product", results['most_sold'][0])
+        
+        with col3:
+            st.metric("Times Sold", results['most_sold'][1])
+        
+        st.subheader("Product Counts")
+        st.write(results['product_counts'])
+        
+        # Optional: Show as a bar chart
+        if st.checkbox("Show as chart"):
+            st.bar_chart(results['product_counts'])
+    else:
+        st.warning("Please enter at least one item")
